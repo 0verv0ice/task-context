@@ -1,16 +1,17 @@
+import React from 'react';
 import { useState } from 'react';
 import { data, IItem } from './data';
 import './styles.css';
 
 type Theme = 'light' | 'dark';
 
+export const ThemeContext = React.createContext('light');
 export function App() {
     const [currentTheme, setCurrentTheme] = useState<Theme>('light');
 
     function changeTheme() {
         setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light');
     }
-
     const className = `app app_${currentTheme}`;
     return (
         <div className={className}>
@@ -22,15 +23,17 @@ export function App() {
 
 function List(props: { theme: Theme; data: IItem[] }) {
     return (
-        <div>
-            {data.map((item) => (
-                <ListItem
-                    theme={props.theme}
-                    caption={item.name}
-                    key={item.id}
-                />
-            ))}
-        </div>
+        <ThemeContext.Provider value={props.theme}>
+            <div>
+                {data.map((item) => (
+                    <ListItem
+                        theme={props.theme}
+                        caption={item.name}
+                        key={item.id}
+                    />
+                ))}
+            </div>
+        </ThemeContext.Provider>
     );
 }
 
